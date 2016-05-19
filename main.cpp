@@ -7,11 +7,11 @@
 
 int main()
 {
-    char *s  = (char*)"192.168.111.12";
+    char *s  = (char*)"192.168.111.17";
     char *pr = (char*)"5000";
-    char *u = (char*)"100";
-    char *p = (char*)"100";
-    char *m = (char*)"TEST0";
+    char *u = (char*)"user";
+    char *p = (char*)"1234";
+    char *m = (char*)"sbas0";
     int  md = AUTO;
     int reconect_time = 5;
 

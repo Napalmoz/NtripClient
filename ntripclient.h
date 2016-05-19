@@ -10,7 +10,6 @@ enum MODE { HTTP = 1, NTRIP1 = 3, AUTO = 4, UDP = 5, END };
 typedef struct _Buffer {
     char *buf;
     int size_msg;                                     //Размер сообщения
-    //int start_msg;                                    //Начало сообщения
     int buyte_count;                                  //кол-во принятых байт
 } Buffer;
 
@@ -61,6 +60,7 @@ private:
     void RunTh(void);
     void RunTh1(void);
     static void *StartRunTh(void*);
+    static int encode(char *buf, int size, char *user, char *pwd);
 };                                                        //Конец объявления класса
 
 #endif // NTRIPCLIENT

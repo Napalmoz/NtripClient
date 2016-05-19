@@ -54,7 +54,6 @@ void NtCl::SetParam(char *s, char *pr, char *u, char *p, char *m, int md, int re
     error = 0;
     proxyserver = 0;
     reconect_time = recon_time;
-    //
 }
 
 
@@ -180,6 +179,7 @@ void NtCl::RunTh(void)
                 mode == NTRIP1 ? "" : "Ntrip-Version: Ntrip/2.0\r\n",
                 AGENTSTRING, revisionstr,
                 (*user || *password) ? "\r\nAuthorization: Basic " : "");
+
                 if(i > MAXDATASIZE-40 || i < 0) /* second check for old glibc */
                 {
                   fprintf(stderr, "Requested data too long\n");
@@ -187,6 +187,7 @@ void NtCl::RunTh(void)
                 }
                 else
                 {
+                  i += NtCl::encode(buf+i, MAXDATASIZE-i-4, user, password);
                   if(i > MAXDATASIZE-4)
                   {
                     fprintf(stderr, "Username and/or password too long\n");
@@ -252,16 +253,6 @@ void NtCl::RunTh(void)
                   if(i < numbytes-l)
                     chunkymode = 1;
                 }
-                else if(!strstr(buf, "ICY 200 OK"))
-                {
-//                  fprintf(stderr, "Could not get the requested data: ");
-//                  for(k = 0; k < numbytes && buf[k] != '\n' && buf[k] != '\r'; ++k)
-//                  {
-//                    fprintf(stderr, "%c", isprint(buf[k]) ? buf[k] : '.');
-//                  }
-//                  fprintf(stderr, "\n");
-                  error = 1;
-                }
                 else if(mode != NTRIP1)
                 {
                   fprintf(stderr, "NTRIP version 2 HTTP connection failed%s.\n",
@@ -288,7 +279,7 @@ void NtCl::RunTh(void)
         }
         if(sockfd)
             close(sockfd);
-        //ожидание переподключения
+//ожидание переподключения
         sleep(reconect_time);
       }
     while(mnt && *mnt != '%' && !stop);
@@ -333,7 +324,7 @@ static char encodingTable [64] = {
       'w','x','y','z','0','1','2','3','4','5','6','7','8','9','+','/'
 };
 
-static int encode(char *buf, int size, char *user, char *pwd)
+int NtCl::encode(char *buf, int size, char *user, char *pwd)
 {
   unsigned char inbuf[3];
   char *out = buf;
